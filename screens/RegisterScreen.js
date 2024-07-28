@@ -7,17 +7,43 @@ import {
   Pressable,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import axios from "axios";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const navigation = useNavigation();
+  const handleRegister = () => {
+    const user = { name, email, password };
+
+    //send a post request to the backend api
+    axios
+      .post("http://localhost:3000/register", user)
+      .then((res) => {
+        console.log(res.data);
+        Alert.alert(
+          "Registration Successful",
+          "You have registered successfully"
+        );
+        setName("");
+        setEmail("");
+        setPassword("");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Registration Error",
+          "an error occurred during registration."
+        );
+        console.log("registration failed", error);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.saf}>
@@ -87,8 +113,8 @@ const RegisterScreen = () => {
           <Text style={styles.forgot}>Forgot password</Text>
         </View>
         <View style={styles.submit}>
-          <Pressable style={styles.submitPress}>
-            <Text style={styles.submitText}>Submit</Text>
+          <Pressable style={styles.submitPress} onPress={handleRegister}>
+            <Text style={styles.submitText}>Register</Text>
           </Pressable>
 
           <Pressable

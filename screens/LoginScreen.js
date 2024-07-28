@@ -7,15 +7,38 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
 import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const navigation = useNavigation();
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+    };
+    console.log(user);
+
+    axios
+      .post("http://localhost:3000/login", user)
+      .then((res) => {
+        console.log(res);
+        const token = res.data.token;
+        AsyncStorage.setItem("authToken", token);
+        navigation.navigate("Main");
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert("Login Error", err);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.saf}>
@@ -48,7 +71,6 @@ const LoginScreen = () => {
               placeholder="Enter your email"
             ></TextInput>
           </View>
-
           <View style={styles.form}>
             <MaterialIcons
               style={styles.icons}
@@ -70,7 +92,7 @@ const LoginScreen = () => {
           <Text style={styles.forgot}>Forgot password</Text>
         </View>
         <View style={styles.submit}>
-          <Pressable style={styles.submitPress}>
+          <Pressable style={styles.submitPress} onPress={handleLogin}>
             <Text style={styles.submitText}>Submit</Text>
           </Pressable>
 
@@ -156,7 +178,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   signupPress: {
-    marginTop: 15,
+    marginTop: 20,
   },
   signupText: {
     color: "gray",

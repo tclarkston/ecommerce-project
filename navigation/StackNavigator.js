@@ -4,10 +4,65 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-
-const Stack = createNativeStackNavigator();
+import HomeScreen from "../screens/HomeScreen";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Entypo } from "@expo/vector-icons";
 
 const StackNavigator = () => {
+  const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
+
+  function BottomTabs() {
+    return (
+      <Tab.Navigator>
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarLabel: "Home",
+            tabBarLabelStyle: { color: "#008e97" },
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <Entypo name="home" size={24} color="black" />
+              ) : (
+                <AntDesign name="home" size={24} color="black" />
+              ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={HomeScreen}
+          options={{
+            tabBarLabel: "Profile",
+            tabBarLabelStyle: { color: "#008e97" },
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <Ionicons name="person" size={24} color="black" />
+              ) : (
+                <Ionicons name="person-outline" size={24} color="black" />
+              ),
+          }}
+        />
+        <Tab.Screen
+          name="Cart"
+          component={HomeScreen}
+          options={{
+            tabBarLabel: "Cart",
+            tabBarLabelStyle: { color: "#008e97" },
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <AntDesign name="shoppingcart" size={24} color="#008e97" />
+              ) : (
+                <AntDesign name="shoppingcart" size={24} color="black" />
+              ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -19,6 +74,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={BottomTabs}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
